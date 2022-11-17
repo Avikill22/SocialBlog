@@ -6,6 +6,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name="users")
@@ -17,12 +20,19 @@ public class User {
 	private Integer userId;
 	
 	@Column(name = "user_name", nullable = false, length=100)
+	@NotEmpty
 	private String name;
 	
+	@Email(message= "Email address is not valid!!")
+	@Column(unique=true)
 	private String emailId;
 	
+	@NotEmpty
+	@Size(min=6, max = 20, message= "password must be minimum 3 and 10 characters!!")
 	private String password;
 	
+	@NotEmpty
+	@Size(min=10, message ="Description should be more thatn 10 character")
 	private String about;
 	
 	public User() {
