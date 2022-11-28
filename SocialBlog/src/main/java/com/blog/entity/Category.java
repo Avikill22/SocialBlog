@@ -13,7 +13,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="Categories")
@@ -28,7 +28,7 @@ public class Category {
 	private String title;
 	
 	@ManyToMany(mappedBy="categories", fetch=FetchType.LAZY)
-	@JsonBackReference
+	@JsonIgnore
 	private List<Post> posts = new ArrayList<>();
 
 	public Category() {
@@ -56,6 +56,14 @@ public class Category {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public List<Post> getPosts() {
+		return posts;
+	}
+
+	public void setPosts(List<Post> posts) {
+		this.posts = posts;
 	}
 	
 }

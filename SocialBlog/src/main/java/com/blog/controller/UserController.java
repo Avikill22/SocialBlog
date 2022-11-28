@@ -31,7 +31,7 @@ public class UserController {
 		return new ResponseEntity<UserDto>(userService.createUser(userDto),HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/{userId}")
+	@PostMapping("/{userId}")
 	public ResponseEntity<UserDto> getUSerById(@PathVariable("userId") Integer userId){
 		return new ResponseEntity<UserDto>(userService.getUserById(userId),HttpStatus.OK);
 	}
