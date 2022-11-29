@@ -8,4 +8,5 @@ import com.blog.entity.Category;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category,Integer> {
 
+	Category findByTitle(String title);
 }

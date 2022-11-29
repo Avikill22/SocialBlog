@@ -1,9 +1,9 @@
 package com.blog.entity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,7 +18,9 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 
 @Entity
 @Table(name="post")
@@ -28,7 +30,7 @@ public class Post {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer postId;
 	
-	@Column(name="title", length=10)
+	@Column(name="title")
 	@NotEmpty
 	private String title;
 	
@@ -41,7 +43,8 @@ public class Post {
 	@ManyToOne
 	private User user;
 	
-	@ManyToMany( cascade = CascadeType.ALL,fetch=FetchType.LAZY)
+	@ManyToMany(fetch=FetchType.LAZY)
+	@Cascade({ CascadeType.SAVE_UPDATE, CascadeType.MERGE, CascadeType.PERSIST})
 	@JoinTable(name = "Post_Category_Table",
 			joinColumns = {
 				@JoinColumn(name="post_id",referencedColumnName="postId")	
@@ -50,12 +53,14 @@ public class Post {
 				@JoinColumn(name="category_id", referencedColumnName="categoryId")	
 			}
 	)
-	@JsonManagedReference
+	
 	private List<Category> categories = new ArrayList<>();
+	
+	@Column(name="date")
+	private Date postDate;
 
 	public Post() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Post(Integer postId, @NotEmpty String title, @Size(min = 20, max = 10000) String content, String imageName,
@@ -106,6 +111,22 @@ public class Post {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public List<Category> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(List<Category> categories) {
+		this.categories = categories;
+	}
+
+	public Date getPostDate() {
+		return postDate;
+	}
+
+	public void setPostDate(Date postDate) {
+		this.postDate = postDate;
 	}
 	
 	

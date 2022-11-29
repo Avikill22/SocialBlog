@@ -13,14 +13,17 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="Categories")
 public class Category {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer categoryId;
 	
 	@Column(nullable=false)
@@ -28,7 +31,8 @@ public class Category {
 	private String title;
 	
 	@ManyToMany(mappedBy="categories", fetch=FetchType.LAZY)
-	@JsonBackReference
+	@Cascade({ CascadeType.SAVE_UPDATE, CascadeType.MERGE, CascadeType.PERSIST})
+	@JsonIgnore
 	private List<Post> posts = new ArrayList<>();
 
 	public Category() {
@@ -56,6 +60,14 @@ public class Category {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public List<Post> getPosts() {
+		return posts;
+	}
+
+	public void setPosts(List<Post> posts) {
+		this.posts = posts;
 	}
 	
 }
