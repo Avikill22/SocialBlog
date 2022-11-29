@@ -1,11 +1,9 @@
 package com.blog.entity;
 
-import java.util.Date;
 import java.util.ArrayList;
-
+import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,6 +17,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 
 @Entity
@@ -42,7 +43,8 @@ public class Post {
 	@ManyToOne
 	private User user;
 	
-	@ManyToMany( cascade = CascadeType.ALL,fetch=FetchType.LAZY)
+	@ManyToMany(fetch=FetchType.LAZY)
+	@Cascade({ CascadeType.SAVE_UPDATE, CascadeType.MERGE, CascadeType.PERSIST})
 	@JoinTable(name = "Post_Category_Table",
 			joinColumns = {
 				@JoinColumn(name="post_id",referencedColumnName="postId")	
@@ -51,6 +53,7 @@ public class Post {
 				@JoinColumn(name="category_id", referencedColumnName="categoryId")	
 			}
 	)
+	
 	private List<Category> categories = new ArrayList<>();
 	
 	@Column(name="date")

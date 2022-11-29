@@ -9,6 +9,7 @@ import com.blog.entity.Category;
 import com.blog.entity.Post;
 import com.blog.entity.User;
 import com.blog.exceptions.BusinessException;
+import com.blog.repository.CategoryRepository;
 import com.blog.repository.PostRepository;
 import com.blog.repository.UserRepository;
 import com.blog.service.PostService;
@@ -21,6 +22,9 @@ public class IPostService implements PostService {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private CategoryRepository categoryRepository;
 	
 	@Override
 	public Post createPost(Post post, Integer userId) {
