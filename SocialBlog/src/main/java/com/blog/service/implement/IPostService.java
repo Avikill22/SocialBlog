@@ -1,18 +1,23 @@
 package com.blog.service.implement;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.blog.entity.Category;
 import com.blog.entity.Post;
+import com.blog.entity.PostOfCategory;
 import com.blog.entity.User;
 import com.blog.exceptions.BusinessException;
 import com.blog.repository.CategoryRepository;
+import com.blog.repository.PostOfCategoryRepository;
 import com.blog.repository.PostRepository;
 import com.blog.repository.UserRepository;
 import com.blog.service.PostService;
+import com.blog.vo.PostVo;
 
 @Service
 public class IPostService implements PostService {
@@ -26,6 +31,9 @@ public class IPostService implements PostService {
 	@Autowired
 	private CategoryRepository categoryRepository;
 	
+	@Autowired
+	private PostOfCategoryRepository postOfCategoryRepository;
+	
 	@Override
 	public Post createPost(Post post, Integer userId) {
 		
@@ -34,7 +42,34 @@ public class IPostService implements PostService {
 		
 		post.setUser(user);
 		post.setPostDate(new Date());
-		return postRepository.save(post);
+		
+		List<PostOfCategory> postOfCategories = post.getPostOfCategory();
+		
+		
+		post.setPostOfCategory(null);
+		
+		
+		postOfCategories
+			.stream()
+			.filter(postOfCategory -> categoryRepository.findByTitle(postOfCategory.getCategory().getTitle()) == null)
+			.forEach(postOfCategory -> {
+				
+				categoryRepository.save(postOfCategory.getCategory());
+			});
+		
+		
+		
+		Post savedPost = postRepository.saveAndFlush(post);
+		
+		postOfCategories
+			.stream()
+			.forEach(postOfCategory -> {
+				postOfCategory.setPost(savedPost);
+				postOfCategory.setCategory(categoryRepository.findByTitle(postOfCategory.getCategory().getTitle()));
+				postOfCategoryRepository.save(postOfCategory);
+			});
+		
+		return savedPost;
 	}
 
 	@Override
@@ -66,14 +101,35 @@ public class IPostService implements PostService {
 	}
 
 	@Override
-	public Post getPostByUser(User user) {
+	public List<PostVo> getPostByUser(User user) {
+		List<Post> postOfUser = postRepository.findByUser(user);
 		
-		return null;
+		
+		if(postOfUser == null || postOfUser.size() < 1){
+			throw new BusinessException("No Post Found by this user",606); 
+		}
+		
+		List<PostVo> postVoList = new ArrayList<>();
+		for(Post post : postOfUser) {
+			PostVo postVo = new PostVo();
+			postVo.setTitle(post.getTitle());
+			postVo.setContent(post.getContent());
+			List<String> categories = new ArrayList<>();
+			for(PostOfCategory postOfCategory: post.getPostOfCategory()) {
+				Category category = categoryRepository.findById(postOfCategory.getCategory().getCategoryId()).get();
+				categories.add(category.getTitle());
+			}
+			postVo.setCategories(new ArrayList<>(categories));
+			postVoList.add(postVo);
+			
+		}
+		return postVoList;
 	}
 
 	@Override
-	public Post getPostByCategory(Category category) {
-		// TODO Auto-generated method stub
+	public List<Post> getPostByCategory(Category category) {
+		
+		
 		return null;
 	}
 

@@ -1,6 +1,5 @@
 package com.blog.entity;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -10,17 +9,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="post")
@@ -43,18 +37,9 @@ public class Post {
 	@ManyToOne
 	private User user;
 	
-	@ManyToMany(fetch=FetchType.LAZY)
-	@Cascade({ CascadeType.SAVE_UPDATE, CascadeType.MERGE, CascadeType.PERSIST})
-	@JoinTable(name = "Post_Category_Table",
-			joinColumns = {
-				@JoinColumn(name="post_id",referencedColumnName="postId")	
-			},
-			inverseJoinColumns = {
-				@JoinColumn(name="category_id", referencedColumnName="categoryId")	
-			}
-	)
-	
-	private List<Category> categories = new ArrayList<>();
+	@OneToMany(mappedBy = "post", fetch=FetchType.EAGER)
+	@JsonIgnore
+	private List<PostOfCategory> PostOfCategory;
 	
 	@Column(name="date")
 	private Date postDate;
@@ -113,12 +98,14 @@ public class Post {
 		this.user = user;
 	}
 
-	public List<Category> getCategories() {
-		return categories;
+	
+
+	public List<PostOfCategory> getPostOfCategory() {
+		return PostOfCategory;
 	}
 
-	public void setCategories(List<Category> categories) {
-		this.categories = categories;
+	public void setPostOfCategory(List<PostOfCategory> postOfCategory) {
+		PostOfCategory = postOfCategory;
 	}
 
 	public Date getPostDate() {

@@ -5,6 +5,7 @@ import java.util.List;
 import com.blog.entity.Category;
 import com.blog.entity.Post;
 import com.blog.entity.User;
+import com.blog.vo.PostVo;
 
 public interface PostService {
 
@@ -16,7 +17,7 @@ public interface PostService {
 	
 	public Post getPostById(Integer id);
 	
-	public Post getPostByUser(User user);
+	public List<PostVo> getPostByUser(User user);
 	
-	public Post getPostByCategory(Category category);
+	public List<Post> getPostByCategory(Category category);
 }
