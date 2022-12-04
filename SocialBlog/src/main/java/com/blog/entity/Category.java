@@ -1,6 +1,5 @@
 package com.blog.entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -9,12 +8,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
-
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -23,17 +19,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Category {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer categoryId;
 	
 	@Column(nullable=false)
-	@NotEmpty
 	private String title;
 	
-	@ManyToMany(mappedBy="categories", fetch=FetchType.LAZY)
-	@Cascade({ CascadeType.SAVE_UPDATE, CascadeType.MERGE, CascadeType.PERSIST})
+	@OneToMany(mappedBy = "category", fetch=FetchType.EAGER)
 	@JsonIgnore
-	private List<Post> posts = new ArrayList<>();
+	private List<PostOfCategory> postOfCategory;
 
 	public Category() {
 		super();
@@ -62,12 +56,12 @@ public class Category {
 		this.title = title;
 	}
 
-	public List<Post> getPosts() {
-		return posts;
+	public List<PostOfCategory> getPostOfCategory() {
+		return postOfCategory;
 	}
 
-	public void setPosts(List<Post> posts) {
-		this.posts = posts;
+	public void setPostOfCategory(List<PostOfCategory> postOfCategory) {
+		this.postOfCategory = postOfCategory;
 	}
-	
+
 }
