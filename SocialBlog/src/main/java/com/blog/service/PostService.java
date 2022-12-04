@@ -15,9 +15,9 @@ public interface PostService {
 	
 	public Post deletePost(Integer postId);
 	
-	public Post getPostById(Integer id);
+	public PostVo getPostById(Integer id);
 	
 	public List<PostVo> getPostByUser(User user);
 	
-	public List<Post> getPostByCategory(Category category);
+	public List<PostVo> getPostByCategory(Category category);
 }

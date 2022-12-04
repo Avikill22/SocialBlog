@@ -3,6 +3,8 @@ package com.blog.service.implement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -93,11 +95,20 @@ public class IPostService implements PostService {
 	}
 
 	@Override
-	public Post getPostById(Integer id) {
+	public PostVo getPostById(Integer id) {
 		Post post = postRepository.findById(id)
 				.orElseThrow(()-> new BusinessException("Post with id number : "+id+" not found.",600));
+		PostVo postVo = new PostVo();
+		postVo.setTitle(post.getTitle());
+		postVo.setContent(post.getContent());
+		List<String> categories = new ArrayList<>();
+		for(PostOfCategory postOfCategory: post.getPostOfCategory()) {
+			Category category = categoryRepository.findById(postOfCategory.getCategory().getCategoryId()).get();
+			categories.add(category.getTitle());
+		}
+		postVo.setCategories(new ArrayList<>(categories));
+		return postVo;
 		
-		return post;
 	}
 
 	@Override
@@ -127,10 +138,31 @@ public class IPostService implements PostService {
 	}
 
 	@Override
-	public List<Post> getPostByCategory(Category category) {
+	public List<PostVo> getPostByCategory(Category category) {
 		
+		List<PostOfCategory> postOfCategories = postOfCategoryRepository.findByCategory(category);
+		if(postOfCategories == null) {
+			throw new BusinessException("No Post found with this title "+category.getTitle(),606);
+		}
 		
-		return null;
+		List<PostVo> postVo = new ArrayList<>();
+		
+		for(PostOfCategory postOfCategory : postOfCategories) {
+			PostVo newPostVo = new PostVo();
+			Post post = postOfCategory.getPost();
+			newPostVo.setTitle(post.getTitle());
+			newPostVo.setContent(post.getContent());
+			
+			List<String> categories = new ArrayList<>();
+			for(PostOfCategory postOfCategory1: post.getPostOfCategory()) {
+				Category category1 = categoryRepository.findById(postOfCategory1.getCategory().getCategoryId()).get();
+				categories.add(category1.getTitle());
+			}
+			newPostVo.setCategories(new ArrayList<>(categories));
+			postVo.add(newPostVo);
+		}
+		
+		return postVo;
 	}
 
 }
