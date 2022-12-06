@@ -3,6 +3,7 @@ package com.blog.service.implement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -180,6 +181,17 @@ public class IPostService implements PostService {
 		}
 		
 		return postVo;
+	}
+
+	@Override
+	@Transactional
+	public List<PostVo> getPosts() {
+		
+		return postRepository.findAll()
+								.stream()
+								.map( p -> {
+									return getPostById(p.getPostId());
+								}).collect(Collectors.toList());
 	}
 
 }
