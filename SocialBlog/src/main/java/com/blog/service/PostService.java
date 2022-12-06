@@ -11,7 +11,7 @@ public interface PostService {
 
 	public Post createPost(Post post, Integer user);
 	
-	public Post updatePost(Post post,Integer postId);
+	public PostVo updatePost(PostVo postVo,Integer postId);
 	
 	public PostVo deletePost(Integer postId);
 	

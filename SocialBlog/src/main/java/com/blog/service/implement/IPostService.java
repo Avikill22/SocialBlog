@@ -75,14 +75,18 @@ public class IPostService implements PostService {
 	}
 
 	@Override
-	public Post updatePost(Post post, Integer postId) {
+	@Transactional
+	public PostVo updatePost(PostVo postVo, Integer postId) {
 		
 		Post retrivedPost = postRepository.findById(postId)
 				.orElseThrow(()-> new BusinessException("Post with id number : "+postId+" not found.",600));
 		
-		retrivedPost.setTitle(post.getTitle() != null? post.getTitle():retrivedPost.getTitle());
-		retrivedPost.setContent(post.getContent() != null ? post.getContent() : retrivedPost.getContent());
-		return postRepository.save(retrivedPost);
+		retrivedPost.setTitle(postVo.getTitle() != null? postVo.getTitle():retrivedPost.getTitle());
+		retrivedPost.setContent(postVo.getContent() != null ? postVo.getContent() : retrivedPost.getContent());
+		postRepository.save(retrivedPost);
+		
+		return getPostById(postId);
+		
 	}
 
 	@Override
