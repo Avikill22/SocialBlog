@@ -3,8 +3,8 @@ package com.blog.service.implement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -86,12 +86,25 @@ public class IPostService implements PostService {
 	}
 
 	@Override
-	public Post deletePost(Integer postId) {
+	@Transactional
+	public PostVo deletePost(Integer postId) {
 		Post post = postRepository.findById(postId)
 				.orElseThrow(()-> new BusinessException("Post with id number : "+postId+" not found.",600));
 		
-		postRepository.delete(post);
-		return post;
+		PostVo postVo = new PostVo();
+		postVo.setTitle(post.getTitle());
+		postVo.setContent(post.getContent());
+		List<String> categories = new ArrayList<>();
+		for(PostOfCategory postOfCategory: post.getPostOfCategory()) {
+			Category category = categoryRepository.findById(postOfCategory.getCategory().getCategoryId()).get();
+			categories.add(category.getTitle());
+		}
+		postVo.setCategories(new ArrayList<>(categories));
+		
+		postOfCategoryRepository.deleteByPost(post);
+		postRepository.deleteById(postId);
+		
+		return postVo;
 	}
 
 	@Override

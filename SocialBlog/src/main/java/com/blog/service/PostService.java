@@ -13,7 +13,7 @@ public interface PostService {
 	
 	public Post updatePost(Post post,Integer postId);
 	
-	public Post deletePost(Integer postId);
+	public PostVo deletePost(Integer postId);
 	
 	public PostVo getPostById(Integer id);
 	
