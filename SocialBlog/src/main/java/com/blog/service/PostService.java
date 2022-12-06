@@ -20,4 +20,6 @@ public interface PostService {
 	public List<PostVo> getPostByUser(User user);
 	
 	public List<PostVo> getPostByCategory(Category category);
+
+	public List<PostVo> getPosts();
 }

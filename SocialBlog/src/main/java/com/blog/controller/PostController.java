@@ -60,5 +60,9 @@ public class PostController {
 	public ResponseEntity<PostVo> updatePost(@PathVariable("id") Integer PostId, @RequestBody PostVo postVo){
 		return new ResponseEntity<PostVo>(postService.updatePost(postVo, PostId),HttpStatus.OK);
 	}
-
+	
+	@GetMapping("/")
+	public ResponseEntity<List<PostVo>> getPosts(){
+		return new ResponseEntity<List<PostVo>> (postService.getPosts(),HttpStatus.OK);
+	}
 }
