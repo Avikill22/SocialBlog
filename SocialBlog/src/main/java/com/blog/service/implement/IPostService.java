@@ -8,6 +8,9 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.blog.entity.Category;
@@ -185,13 +188,17 @@ public class IPostService implements PostService {
 
 	@Override
 	@Transactional
-	public List<PostVo> getPosts() {
+	public List<PostVo> getPosts(Integer pageNumber,Integer pageValue) {
 		
-		return postRepository.findAll()
-								.stream()
-								.map( p -> {
+		
+		Page<Post> pagedPost = postRepository.findAll(PageRequest.of(pageNumber, pageValue));
+		
+		return pagedPost.getContent()
+						.stream()
+							.map( p -> {
 									return getPostById(p.getPostId());
-								}).collect(Collectors.toList());
+									})
+							.collect(Collectors.toList());
 	}
 
 }

@@ -21,5 +21,5 @@ public interface PostService {
 	
 	public List<PostVo> getPostByCategory(Category category);
 
-	public List<PostVo> getPosts();
+	public List<PostVo> getPosts(Integer pageNumber,Integer pageValue);
 }

@@ -62,7 +62,8 @@ public class PostController {
 	}
 	
 	@GetMapping("/")
-	public ResponseEntity<List<PostVo>> getPosts(){
-		return new ResponseEntity<List<PostVo>> (postService.getPosts(),HttpStatus.OK);
+	public ResponseEntity<List<PostVo>> getPosts(@RequestParam(value = "pageNumber", defaultValue = "0", required = false)Integer pageNumber,
+				@RequestParam(value = "pageValue", defaultValue = "3", required = false)Integer pageValue){
+		return new ResponseEntity<List<PostVo>> (postService.getPosts(pageNumber,pageValue),HttpStatus.OK);
 	}
 }
