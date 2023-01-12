@@ -4,15 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
 import com.blog.entity.Category;
 import com.blog.entity.Post;
 import com.blog.entity.PostOfCategory;
@@ -87,6 +83,7 @@ public class IPostService implements PostService {
 		
 		retrivedPost.setTitle(postVo.getTitle() != null? postVo.getTitle():retrivedPost.getTitle());
 		retrivedPost.setContent(postVo.getContent() != null ? postVo.getContent() : retrivedPost.getContent());
+		retrivedPost.setImageName(postVo.getImageName() != null ? postVo.getImageName() : retrivedPost.getImageName());
 		postRepository.save(retrivedPost);
 		
 		return getPostById(postId);
@@ -122,6 +119,7 @@ public class IPostService implements PostService {
 		PostVo postVo = new PostVo();
 		postVo.setTitle(post.getTitle());
 		postVo.setContent(post.getContent());
+		postVo.setImageName(post.getImageName());
 		List<String> categories = new ArrayList<>();
 		for(PostOfCategory postOfCategory: post.getPostOfCategory()) {
 			Category category = categoryRepository.findById(postOfCategory.getCategory().getCategoryId()).get();
