@@ -126,6 +126,7 @@ public class IPostService implements PostService {
 			categories.add(category.getTitle());
 		}
 		postVo.setCategories(new ArrayList<>(categories));
+		postVo.setUser(post.getUser());
 		return postVo;
 		
 	}
