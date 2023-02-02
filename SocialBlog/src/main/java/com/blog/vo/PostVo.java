@@ -2,6 +2,8 @@ package com.blog.vo;
 
 import java.util.List;
 
+import com.blog.entity.User;
+
 public class PostVo {
 	
 	private String title;
@@ -11,6 +13,8 @@ public class PostVo {
 	private String imageName;
 	
 	private List<String> categories;
+	
+	private User user;
 
 	public PostVo() {
 		super();
@@ -47,6 +51,14 @@ public class PostVo {
 
 	public void setCategories(List<String> categories) {
 		this.categories = categories;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 	
 
