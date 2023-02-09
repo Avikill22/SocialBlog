@@ -1,7 +1,9 @@
 package com.blog.vo;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.blog.entity.Comment;
 import com.blog.entity.User;
 
 public class PostVo {
@@ -15,6 +17,8 @@ public class PostVo {
 	private List<String> categories;
 	
 	private User user;
+	
+	private List<Comment> comments = new ArrayList<>();
 
 	public PostVo() {
 		super();
@@ -59,6 +63,14 @@ public class PostVo {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
 	}
 	
 

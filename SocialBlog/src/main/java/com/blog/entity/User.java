@@ -46,6 +46,10 @@ public class User {
 	@JsonIgnore
 	private List<Post> posts = new ArrayList<>();
 	
+	@OneToMany(mappedBy="user", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+	@JsonIgnore
+	private List<Comment> comments = new ArrayList<>();
+	
 	public User() {
 		super();
 		// TODO Auto-generated constructor stub
